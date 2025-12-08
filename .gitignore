@@ -89,3 +89,6 @@ coverage/
 *.sln
 *.sw?
 
+# Documentation
+docs/
+
