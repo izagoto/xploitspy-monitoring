@@ -20,18 +20,8 @@ Aplikasi monitoring dan logging untuk perangkat Android dengan fitur lengkap.
 - Device Admin
 - Built In APK Builder
 
-## 🔒 Security & Privacy
-
-**PENTING:** 
-- File-file sensitif (Firebase credentials, API keys) **TIDAK BOLEH** di-commit ke repository Git.
-- **Hanya Anda yang memiliki write access** - orang lain hanya read-only.
-
-📖 **Baca panduan lengkap:**
-- [SECURITY.md](./SECURITY.md) - Panduan keamanan umum
-- [docs/ACCESS_CONTROL.md](./docs/ACCESS_CONTROL.md) - Mengatur akses repository (READ-ONLY)
-- [docs/GITHUB_SETUP.md](./docs/GITHUB_SETUP.md) - Setup GitHub repository
-
 **Quick Setup:**
+
 ```bash
 # Setup Git repository dengan security yang baik
 ./scripts/setup-git-secure.sh
@@ -57,6 +47,7 @@ cp client/app/google-services.json.example client/app/google-services.json
 Aplikasi ini dirancang untuk monitoring **tanpa perlu colok USB**. Data dikirim dari Android device ke Firebase Cloud, kemudian server sync ke database dan ditampilkan di web dashboard secara realtime.
 
 **Alur Data:**
+
 ```
 Android Device → Firebase Firestore → Node.js Server → Web Dashboard
      (Internet)        (Cloud)          (SQLite)        (Browser)
@@ -69,6 +60,7 @@ Android Device → Firebase Firestore → Node.js Server → Web Dashboard
 ### Install JRE 11
 
 **Debian, Ubuntu, dll:**
+
 ```bash
 sudo apt-get install openjdk-11-jre
 ```
@@ -103,6 +95,7 @@ pm2 startup  # untuk menjalankan XploitSPY saat startup
 #### Menggunakan NPM Scripts (Disarankan)
 
 **Menjalankan Server:**
+
 ```bash
 cd server
 npm run pm2:start        # Start di port 3000 (default)
@@ -110,24 +103,28 @@ npm run pm2:start:80    # Start di port 80 (perlu root)
 ```
 
 **Menghentikan Server:**
+
 ```bash
 cd server
 npm run pm2:stop
 ```
 
 **Restart Server:**
+
 ```bash
 cd server
 npm run pm2:restart
 ```
 
 **Melihat Status Server:**
+
 ```bash
 cd server
 npm run pm2:status
 ```
 
 **Melihat Logs Server:**
+
 ```bash
 cd server
 npm run pm2:logs
@@ -136,11 +133,13 @@ npm run pm2:logs
 #### Menggunakan PM2 Langsung
 
 **Menjalankan Server:**
+
 ```bash
 pm2 start server/index.js --name xploitspy
 ```
 
 **Menghentikan Server:**
+
 ```bash
 pm2 stop xploitspy
 # atau stop semua
@@ -148,6 +147,7 @@ pm2 stop all
 ```
 
 **Menghapus dari PM2:**
+
 ```bash
 pm2 delete xploitspy
 # atau hapus semua
@@ -155,16 +155,19 @@ pm2 delete all
 ```
 
 **Melihat Status:**
+
 ```bash
 pm2 status
 ```
 
 **Melihat Logs:**
+
 ```bash
 pm2 logs xploitspy
 ```
 
 **Catatan:**
+
 - `pm2 stop` = menghentikan sementara (bisa di-start lagi)
 - `pm2 delete` = menghapus dari PM2 (harus start ulang)
 - `pm2 kill` = menghentikan semua PM2 daemon
@@ -172,16 +175,19 @@ pm2 logs xploitspy
 ### Service yang Berjalan
 
 **1. PM2 Daemon (God Daemon)**
+
 - Service PM2 itu sendiri yang selalu berjalan untuk mengelola proses
 - Tidak perlu dihentikan kecuali ingin menghentikan semua PM2
 - Untuk menghentikan: `pm2 kill`
 
 **2. XploitSPY Server**
+
 - Service utama aplikasi (Node.js server)
 - Berjalan di port 3000 (default) atau port 80
 - Dikelola melalui PM2 dengan nama `xploitspy`
 
 **Melihat Semua Service:**
+
 ```bash
 # Melihat semua proses PM2
 pm2 list
@@ -196,6 +202,7 @@ lsof -i -P -n | grep LISTEN
 ```
 
 **Menghentikan Semua Service:**
+
 ```bash
 # Hentikan semua proses PM2
 pm2 stop all
@@ -210,6 +217,7 @@ pm2 kill
 ### Akses Dashboard
 
 Cari IP publik Anda:
+
 ```bash
 curl ifconfig.me
 ```
@@ -217,6 +225,7 @@ curl ifconfig.me
 Di browser, navigasi ke Server Static IP Address Anda, contoh: `http://192.168.55.203`
 
 **Login details:**
+
 - Username: `admin`
 - Password: `password`
 
@@ -227,6 +236,7 @@ Di browser, navigasi ke Server Static IP Address Anda, contoh: `http://192.168.5
 Jika Product Name di dashboard menampilkan "Unknown", device perlu re-register dengan product name baru.
 
 **Cara 1: Restart Aplikasi (Paling Mudah)**
+
 ```bash
 # Force stop aplikasi
 adb shell am force-stop com.xploitspy.client
@@ -236,6 +246,7 @@ adb shell am start -n com.xploitspy.client/.MainActivity
 ```
 
 **Cara 2: Install APK Baru**
+
 ```bash
 cd client
 ./gradlew assembleDebug
@@ -243,6 +254,7 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
 **Cara 3: Update Manual di Database (Jika perlu)**
+
 ```bash
 cd server
 sqlite3 data/xploitspy.db "UPDATE devices SET product_name = 'PRODUCT_NAME' WHERE device_id = 'DEVICE_ID';"
